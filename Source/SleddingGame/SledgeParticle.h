@@ -18,10 +18,23 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SledgeParticle")
 	float minSpeedForParticles = 100.f;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SledgeParticle")
+	int minParticleCount = 100.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SledgeParticle")
+	int maxParticleCount = 200.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SledgeParticle")
+	float particleScaleSpeedRange = 5000.f;
+
 	TArray<UNiagaraComponent*> Bursts;
-	unsigned int TotalBursts;
-	bool IsBurstActive;
 	UNiagaraComponent* SpeedLines;
+	unsigned int TotalBursts;
+	unsigned int particleCountRange;
+	bool IsBurstActive;
+
+	UPROPERTY(VisibleAnywhere)
+	unsigned int curruntParticleCount;
 
 	// Sets default values for this component's properties
 	USledgeParticle();
@@ -37,5 +50,5 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "SledgeParticle")
 	void SetParticlesActive(bool isGrounded, float speed);
 
-	void SetBursts(bool value);
+	void SetBursts(bool value, float speed);
 };

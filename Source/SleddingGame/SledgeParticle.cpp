@@ -23,10 +23,13 @@ void USledgeParticle::BeginPlay()
 	Super::BeginPlay();
 
 	TotalBursts = Bursts.Num();
-	SetBursts(false);
+	SetBursts(false, 0);
 
 	if (SpeedLines)
 		SpeedLines->SetActive(false);
+
+	particleCountRange = maxParticleCount - minParticleCount;
+	curruntParticleCount = minParticleCount;
 }
 
 void USledgeParticle::SetParticleReferences(TArray<UNiagaraComponent*> bursts, UNiagaraComponent* speedLines)
@@ -38,18 +41,30 @@ void USledgeParticle::SetParticleReferences(TArray<UNiagaraComponent*> bursts, U
 void USledgeParticle::SetParticlesActive(bool isGrounded, float speed)
 {
 	bool isMinSpeedReached = speed > minSpeedForParticles;
+
 	if (SpeedLines)
 		SpeedLines->SetActive(isMinSpeedReached);
-	SetBursts(isGrounded && isMinSpeedReached);
+	SetBursts(isGrounded && isMinSpeedReached, speed);
 }
 
-void USledgeParticle::SetBursts(bool value)
+void USledgeParticle::SetBursts(bool value, float speed)
 {
-	if (IsBurstActive == value)
-		return;
+	if (value)
+	{
+		float particleCountScale = FMath::Clamp((speed - minSpeedForParticles) / particleScaleSpeedRange, 0, 1);
+		curruntParticleCount = minParticleCount + (float)particleCountRange * particleCountScale;
+	}
 
 	for (UNiagaraComponent* burst : Bursts)
-		burst->SetActive(value);
+	{
+		if (burst)
+		{
+			burst->SetActive(value);
+			if (value)
+				burst->SetVariableInt("EmmisionRate", curruntParticleCount);
+		}
+	}
+
 	IsBurstActive = value;
 }
 
