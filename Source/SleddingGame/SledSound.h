@@ -19,13 +19,13 @@ public:
 	USledSound();
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sounds")
-	float PitchMinimumThreshold;
+	float PitchMinimumThreshold = 0.2f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sounds")
-	float PitchMultiplierRange;
+	float PitchMultiplierRange = 2.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sounds")
-	float SoundPitchScaleMaxSpeed;
+	float SoundPitchScaleMaxSpeed = 5000.f;
 
 	UAudioComponent* RockHitAudioComponent;
 	UAudioComponent* TreeHitAudioComponent;
