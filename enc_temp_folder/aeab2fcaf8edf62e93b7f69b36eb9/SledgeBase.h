@@ -34,16 +34,16 @@ public:
 	float LForce = 500.0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SledgeBase")
-	FVector velocity;
+	FVector Vel;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SledgeBase")
-	float speed;
+	float spee;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SledgeBase")
 	UStaticMeshComponent* SledgeMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SledgeBase")
-	float matFriction;
+	FVector frictionForce;
 
 protected:
 	// Called when the game starts or when spawned
@@ -63,7 +63,7 @@ public:
 	void ApplyAirControl();
 
 	UFUNCTION(BlueprintCallable, Category = "SledgeBase")
-	void ApplyDirectionalFriction();
+	void ApplyDirectionalFriction(float otherFriction);
 
 	UFUNCTION(BlueprintCallable, Category = "SledgeBase")
 	void ResetValues();

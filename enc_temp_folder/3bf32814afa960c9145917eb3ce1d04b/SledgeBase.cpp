@@ -13,7 +13,7 @@ ASledgeBase::ASledgeBase()
 
 void ASledgeBase::ApplySteerTorque()
 {
-	FVector Torque = SledgeMesh->GetUpVector() * sTorque * yaw;
+	FVector Torque = (SledgeMesh->GetUpVector() * sTorque) * yaw;
 	
 	SledgeMesh->AddTorqueInRadians(Torque);
 }
@@ -38,25 +38,21 @@ void ASledgeBase::ApplyAirControl()
 	SledgeMesh->AddTorqueInRadians(Torque);
 }
 
-void ASledgeBase::ApplyDirectionalFriction()
+void ASledgeBase::ApplyDirectionalFriction(float otherFriction)
 {
-	velocity = SledgeMesh->GetComponentVelocity();
-	if (velocity.IsNearlyZero()) return;
+	FVector vel = SledgeMesh->GetComponentVelocity();
+	FVector velDir = vel;
+	velDir.Normalize();
 
-	const FVector rightVector = SledgeMesh->GetRightVector();
-	const FVector sideVel = FVector::DotProduct(velocity, rightVector) * rightVector;
+	float frictionRatio = FMath::Abs( velDir.Dot(SledgeMesh->GetRightVector()));
+	frictionRatio *= otherFriction;
 
-	const FVector sideFriction = -sideVel;
+	FVector friction = frictionRatio * vel * -1;
+	frictionForce = friction;
+	FVector forwardForce = SledgeMesh->GetForwardVector() * friction.Length() * 5.f;
 
-	float surfaceFriction = matFriction;
-
-	if (!isGrounded)
-		surfaceFriction = 0.3f;
-
-	surfaceFriction *= 5.0f;
-	FVector finalFriction = sideFriction * surfaceFriction;
- 
-	SledgeMesh->AddForce(finalFriction, NAME_None, true);
+	SledgeMesh->AddForce(friction, NAME_None, true);
+	SledgeMesh->AddForce(forwardForce, NAME_None, false);
 }
 
 void ASledgeBase::ResetValues()
