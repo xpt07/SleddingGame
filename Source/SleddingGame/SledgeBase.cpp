@@ -11,6 +11,63 @@ ASledgeBase::ASledgeBase()
 
 }
 
+void ASledgeBase::ApplySteerTorque()
+{
+	FVector Torque = (SledgeMesh->GetUpVector() * sTorque) * yaw;
+	
+	SledgeMesh->AddTorqueInRadians(Torque);
+}
+
+void ASledgeBase::ApplyForwardForce()
+{
+	FVector Force = SledgeMesh->GetForwardVector() * LForce;
+	if (isGrounded)
+	{
+		SledgeMesh->AddForce(Force);
+	}
+}
+
+void ASledgeBase::ApplyAirControl()
+{
+	FVector Torque = (SledgeMesh->GetForwardVector() * sTorque) * roll;
+
+	SledgeMesh->AddTorqueInRadians(Torque);
+
+	Torque = (SledgeMesh->GetRightVector() * sTorque) * pitch;
+
+	SledgeMesh->AddTorqueInRadians(Torque);
+}
+
+void ASledgeBase::ApplyDirectionalFriction(float otherFriction)
+{
+	FVector vel = SledgeMesh->GetComponentVelocity();
+	FVector velDir = vel;
+	velDir.Normalize();
+
+	float frictionRatio = FMath::Abs( velDir.Dot(SledgeMesh->GetRightVector()));
+	frictionRatio *= otherFriction;
+
+	FVector friction = frictionRatio * vel * -1;
+	frictionForce = friction;
+	FVector forwardForce = SledgeMesh->GetForwardVector() * friction.Length() * 5.f;
+
+	SledgeMesh->AddForce(friction, NAME_None, true);
+	SledgeMesh->AddForce(forwardForce, NAME_None, false);
+}
+
+void ASledgeBase::ResetValues()
+{
+	yaw = 0.0f;
+	pitch = 0.0f;
+	roll = 0.0f;
+	isGrounded = false;
+}
+
+void ASledgeBase::setStaticMesh(UStaticMeshComponent* mesh)
+{
+	SledgeMesh = mesh;
+}
+
 // Called when the game starts or when spawned
 void ASledgeBase::BeginPlay()
 {
@@ -22,11 +79,4 @@ void ASledgeBase::BeginPlay()
 void ASledgeBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
-
-UStaticMeshComponent* ASledgeBase::GetStaticMesh()
-{
-	return SledgeMesh;
-}
-
