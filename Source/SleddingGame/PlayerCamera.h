@@ -19,6 +19,9 @@ public:
 	UPlayerCamera();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera Rotation")
+	FRotator DefaultRotation;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera Rotation")
 	float CameraRotationSpeed = 100.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera Rotation")
@@ -58,4 +61,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Camera Manager")
 	void OnRotationInput(FVector2D rotationInput);
+
+	UFUNCTION(BlueprintCallable, Category = "Camera Manager")
+	void Reset();
 };

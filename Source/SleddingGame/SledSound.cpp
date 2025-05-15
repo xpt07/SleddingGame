@@ -5,6 +5,7 @@
 #include "Components/AudioComponent.h"
 #include "Sound/SoundWave.h"
 #include "Serialization/StructuredArchive.h"
+#include <Kismet/GameplayStatics.h>
 
 // Sets default values for this component's properties
 USledSound::USledSound()
@@ -22,6 +23,8 @@ void USledSound::BeginPlay()
 {
 	Super::BeginPlay();
 
+	RockHitTime = GetWorld()->GetRealTimeSeconds();
+	TreeHitTime = GetWorld()->GetRealTimeSeconds();
 	// ...
 
 }
@@ -67,15 +70,22 @@ void USledSound::UpdateSounds(float speed, bool grounded)
 	}
 }
 
-void USledSound::PlayHitSounds(TArray<FName> tags)
+void USledSound::PlayHitSounds(TArray<FName> tags, float speed)
 {
-	if (tags.Contains("Rock") && RockHitAudioComponent)
+	if (speed < HitSoundMinSpeed)
+		return;
+
+	float time = GetWorld()->GetRealTimeSeconds();
+
+	if (time > RockHitTime + HitSoundInterval && tags.Contains("Rock") && RockHitAudioComponent)
 	{
 		RockHitAudioComponent->Play();
+		RockHitTime = time;
 	}
-	else if (tags.Contains("Tree") && TreeHitAudioComponent)
+	else if (time > TreeHitTime + HitSoundInterval && tags.Contains("Tree") && TreeHitAudioComponent)
 	{
 		TreeHitAudioComponent->Play();
+		TreeHitTime = time;
 	}
 }
 
