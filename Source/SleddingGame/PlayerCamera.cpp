@@ -20,6 +20,8 @@ void UPlayerCamera::BeginPlay()
 {
 	Super::BeginPlay();
 
+	if (CameraArm)
+		CameraArm->SetRelativeRotation(DefaultRotation);
 	// ...
 
 }
@@ -66,5 +68,11 @@ void UPlayerCamera::OnRotationInput(FVector2D rotationInput)
 		// set the new rotation
 		CameraArm->SetRelativeRotation(newRotation);
 	}
+}
+
+void UPlayerCamera::Reset()
+{
+	if (CameraArm)
+		CameraArm->SetRelativeRotation(DefaultRotation);
 }
 

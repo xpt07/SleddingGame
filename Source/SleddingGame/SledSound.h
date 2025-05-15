@@ -17,7 +17,13 @@ class SLEDDINGGAME_API USledSound : public UActorComponent
 public:
 	// Sets default values for this component's properties
 	USledSound();
-	
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sounds")
+	float HitSoundInterval = 1.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sounds")
+	float HitSoundMinSpeed = 30.0f;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sounds")
 	float PitchMinimumThreshold = 0.2f;
 
@@ -31,6 +37,9 @@ public:
 	UAudioComponent* TreeHitAudioComponent;
 	UAudioComponent* WindAudioComponent;
 	UAudioComponent* SlideAudioComponent;
+
+	float RockHitTime;
+	float TreeHitTime;
 
 protected:
 	// Called when the game starts
@@ -48,5 +57,5 @@ public:
 	void UpdateSounds(float speed, bool grounded);
 
 	UFUNCTION(BlueprintCallable, Category = "Sounds")
-	void PlayHitSounds(TArray<FName> tags);
+	void PlayHitSounds(TArray<FName> tags, float speed);
 };
