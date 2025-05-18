@@ -45,10 +45,15 @@ void UPlayerCamera::UpdateCamera(float speed)
 {
 	if (Camera)
 	{
-		float ratio = (speed - MinFovSpeed) / FovChangeRange;
-		ratio = FMath::Clamp(ratio, 0.f, 1.f);
-		float newFov = FMath::Lerp(MinFovValue, MaxFovValue, ratio);
+		float fovRatio = (speed - MinFovSpeed) / FovChangeRange;
+		fovRatio = FMath::Clamp(fovRatio, 0.f, 1.f);
+		float newFov = FMath::Lerp(MinFovValue, MaxFovValue, fovRatio);
 		Camera->SetFieldOfView(newFov);
+
+		float armLengthRatio = (speed - MinArmLength) / FovChangeRange;
+		armLengthRatio = FMath::Clamp(fovRatio, 0.f, 1.f);
+		float newArmLength = FMath::Lerp(MinArmLength, MaxArmLength, armLengthRatio);
+		CameraArm->TargetArmLength = newArmLength;
 	}
 }
 
@@ -73,6 +78,9 @@ void UPlayerCamera::OnRotationInput(FVector2D rotationInput)
 void UPlayerCamera::Reset()
 {
 	if (CameraArm)
-		CameraArm->SetRelativeRotation(DefaultRotation);
+	{
+		FRotator newRotation = CameraArm->GetAttachParentActor()->GetActorRotation();
+		CameraArm->SetRelativeRotation(newRotation + DefaultRotation);
+	}
 }
 

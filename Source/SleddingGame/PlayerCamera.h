@@ -37,6 +37,12 @@ public:
 	float MaxFovValue = 90.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera Fov")
+	float MinArmLength = 700.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera Fov")
+	float MaxArmLength = 900.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera Fov")
 	float MinFovSpeed = 1000.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera Fov")
