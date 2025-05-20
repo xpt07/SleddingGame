@@ -66,7 +66,11 @@ void USledSound::UpdateSounds(float speed, bool grounded)
 	if (SlideAudioComponent)
 	{
 		SlideAudioComponent->SetPitchMultiplier(newPitch);
-		SlideAudioComponent->Activate(grounded);
+
+		if (grounded && !SlideAudioComponent->IsPlaying() && speed > 100.f)
+			SlideAudioComponent->FadeIn(0.5f, 1.0f);
+		if (!grounded && SlideAudioComponent->IsPlaying())
+			SlideAudioComponent->FadeOut(0.5f, 0.2f);
 	}
 }
 
